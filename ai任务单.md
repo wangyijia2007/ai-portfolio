@@ -33,3 +33,33 @@
 ### 反思
 
 （可在此补充：AI 如何帮助你完成任务、遇到的问题及解决方法）
+
+## 任务 2：第 4 周 API 问答机器人
+
+### 任务目标
+
+完成 `week04_API/week4_api_bot.py`：命令行提问 → 调用大模型 API → 终端打印 → 追加 `chat_log.txt`。
+
+### 使用的 AI 工具
+
+- Cursor（AI 编程助手）
+- DeepSeek Chat API（OpenAI 兼容接口）
+
+### 完成过程
+
+1. 按讲义安装 `openai`、`python-dotenv`，复制 `.env.example` 为 `.env` 并填入密钥。
+2. 走读骨架：`weekpath.load_env()`、按需 `get_client()`、友好错误提示、日志写根目录。
+3. 增强脚本：返回 token 用量与费用估算，补齐超时/断连/鉴权失败提示。
+4. 用 `run_w04_demo.py` 跑 3 个学科问题与 temperature / max_tokens 对比，写入参数体验记录。
+5. 完成密钥安全自查后 push（确认仓库无 `.env`）。
+
+### 结果
+
+- [ ] `week4_api_bot.py` 能跑通并打印
+- [ ] `chat_log.txt` 中有 3 次学科问答（本地文件，不提交）
+- [ ] 参数体验记录已填写
+- [ ] 密钥安全自查表已打钩，仓库无 `.env`
+
+### 反思
+
+API 与网页聊天的差别在于可程序化：可批量、可嵌进脚本、可留痕、按 token 计费。密钥绝不能写进代码或推进仓库。
