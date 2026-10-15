@@ -5,9 +5,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
-chat_log.txt
 chroma_db/
 data/private/
-练习.txt
 注入实验记录.md
 .DS_Store
