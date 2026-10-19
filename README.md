@@ -12,6 +12,7 @@
 | W2 | `prompt-library/`（6 个模板 + `prompt_iteration_log.md`） |
 | W3 | `week03_Python/vocab_tool.py`、`练习.txt`、`week03_Python/AI辅助编程实录.md` |
 | W4 | `week04_API/week4_api_bot.py`、`chat_log.txt`、`week04_API/密钥安全自查表.md` |
+| W5 | `week05_本地部署/ollama_notes.md`（安装步骤、选型理由、本地 vs 云端 ≥5 题对比） |
 
 ## 快速运行
 
