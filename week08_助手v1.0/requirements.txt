@@ -1,0 +1,9 @@
+openai
+requests
+python-dotenv
+langchain
+langchain-community
+langchain-chroma
+langchain-ollama
+langchain-text-splitters
+chromadb
