@@ -41,3 +41,5 @@ print(answer("你好", use_rag=False, prefer="local"))
 - 未启动 Ollama / 未 pull `nomic-embed-text` 时，本地 RAG 会失败；可设 `prefer="api"`（需密钥）或先启动 Ollama。
 - 机房代理可能劫持 localhost：脚本依赖 `rag_qa.py` 内已处理的 `NO_PROXY`；仍失败时先清代理再试。
 - 小模型 `qwen2.5:0.5b` 生成质量有限，数字类问题务必开 `use_rag=True`。
+
+> 为何要诚实写「已知问题」：见 [`known_issues_why.md`](./known_issues_why.md)（课后作业 2 · 约 200 字）。
