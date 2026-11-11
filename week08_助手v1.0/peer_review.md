@@ -1,12 +1,12 @@
 # 第 8 周互评表（peer_review）
 
 - **评阅人**：王一嘉（f25210117）
-- **指定评阅对象**：陈彦妃
-- **对象仓库**：github:echo921201/AI-portfolio  
-  完整网址：https://github.com/echo921201/AI-portfolio
-- **评阅依据**：《第8周指定互评分配表_20261109》；讲义四维度只描述现象、不打分
-- **复现环境**：Windows 10、本机已有 Python / Ollama（`qwen2.5:0.5b`、`nomic-embed-text`）
-- **复现时间**：2026-11-10
+- **指定评阅对象**：陈心怡（更新版分配表；原对象陈彦妃已更换）
+- **对象仓库**：github:cxy94/ai-portfolio  
+  完整网址：https://github.com/cxy94/ai-portfolio
+- **评阅依据**：《第8周指定互评分配表_（更新版）》；讲义四维度只描述现象、不打分
+- **复现环境**：Windows、本机已有 Python / Ollama（`qwen2.5:0.5b`、`nomic-embed-text`）
+- **复现时间**：2026-11-11
 
 ---
 
@@ -14,61 +14,54 @@
 
 **步骤：**
 
-1. 用 GitHub API 拉取远端 `main`（含 `week8/`、`week06_双引擎/`、`week07_RAG/`、`data/`、`weekpath.py`）。
-2. 按 README「怎么用」进入 `week8/课堂作业`，执行：`python assistant_v1.py`。
+1. 拉取远端 `main` 中 `week08_assistant_v1/` 及依赖周次代码、`data/`、`weekpath.py`。
+2. 按 README「怎么用」在**仓库根目录**执行：  
+   `python week08_assistant_v1/assistant_v1.py --demo`
 
 **现象：**
 
-- 脚本能启动，三个问题都有回答，过程中**没有**抛出未捕获异常；每题后打印分隔线，与入口里的三问列表一致。
-- 本机实测摘要（原样要点）：
-  - 「把字句的教学难点有哪些」→ 给出语言结构、语义、语法点等若干条（偏泛）。
-  - 「HSK4 词汇量要求是多少」→ 答成「HSK4的词汇量要求是8个。」（数字与常见等级标准不一致）。
-  - 「《愚公移山》可以设计什么课堂活动」→ 列出角色扮演、小组讨论、辩论等活动条目。
-- 对象自带的 `week8/课堂作业/answer_log.md` 也记录了三问结果与点评；其中写「跑法：进 week8 目录」，与同目录 README 写的「在本目录（week8/课堂作业）运行」**路径表述不一致**（按 README 进「课堂作业」可以跑通）。
+- 若在 `week08_assistant_v1/` 目录下直接跑 `python assistant_v1.py`（不带问题、不用 `--demo`），会提示「没有输入问题」并进入 `问题>` 交互；按 README 回仓库根目录用 `--demo` 后可跑通。
+- `--demo` 能启动：首次会建 `chroma_db/`（本机约数十秒），三问均有回答，未见未捕获崩溃。
+- 本机实测要点（原样摘要）：
+  - 「把字句的教学难点…」→ 给出词汇量/语法点/语境等条目与讲授方法；检索命中多段；提示「本次答案未标出处」。
+  - 「HSK 4 级累计需要掌握多少词汇、多少汉字？」→ 答「资料中未提及。」（RAG 开着仍如此）。
+  - 「《愚公移山》可以设计什么课堂活动？」→ 提到分角色朗读、辩论、成语接龙等。
+  - 同一 HSK4 题 `--no-rag` 对照：裸答给出「词汇量约 2000、汉字约 1000」一类数字。
+- 对象仓库另有 `answer_log.md` 作为其三问证据文件。
 
 ---
 
 ## ② README 能复现吗
 
-**步骤：** 打开 `week8/课堂作业/README.md`，按四段式逐步对照安装与运行说明。
+**步骤：** 阅读 `week08_assistant_v1/README.md`，按「怎么装 / 怎么用」操作。
 
 **现象：**
 
-- README 具备「功能 / 怎么装 / 怎么用 / 已知问题」四段。
-- 「怎么装」写明：`pip install -r requirements.txt`、拉取 `qwen2.5:0.5b` 与 `nomic-embed-text`、可选复制 `.env.example`；仓库根目录可见 `.env.example`。
-- 「怎么用」写明在 `week8/课堂作业` 运行 `python assistant_v1.py`；本机按此路径**跑通**。
-- `requirements.txt` 与 README 同目录；本机依赖此前已具备，未因缺包装失败。本次未从零重装全套依赖，也未配置 DeepSeek 密钥（全程本地）。
-- 同 README 提到的 `week8/课后作业/compare_rag.py`、`rag_mapping.md` 在远端均存在。
+- README 含「功能 / 怎么装 / 怎么用 / 已知问题」四段；另附流水线映射与目录说明。
+- 「怎么装」写明：`pip install -r week08_assistant_v1/requirements.txt`、拉取两个 Ollama 模型、可选 `.env`；仓库根有 `.env.example`。
+- 「怎么用」明确要求在**仓库根目录**调用 `python week08_assistant_v1/assistant_v1.py ...`，并给出单问、`--no-rag`、`--demo` 三条命令；本机按第③条 `--demo` **复现成功**。
+- 同目录有 `requirements.txt`；本机依赖此前已具备，未从零重装，也未配云端密钥（全程 local）。
 
 ---
 
 ## ③ Release 发了吗
 
-**步骤：** 查询仓库 Releases 与 Tags。
+**步骤：** 查 Tags 与 Releases API。
 
 **现象：**
 
-- 存在 tag **`v1.0`**。
-- 存在正式 Release：**「学科智能问答助手 v1.0」**（非 draft）。
-- Release 正文写明了本周文件路径（`assistant_v1.py`、`answer_log.md`、`compare_rag.py`、`rag_mapping.md`）、用法（进 `week8/课堂作业` 运行）与安装提示（`pip install -r week8/课堂作业/requirements.txt`）。功能 / 安装 / 用法在 Release 页有对应文字。
+- 远端存在 git 标签 **`v1.0`**（`refs/tags/v1.0` 可查到）。
+- Releases 列表长度为 **0**；`/releases/latest` 与 `/releases/tags/v1.0` 均为 404。  
+  → **有 tag，但网页端 Release 页面未发布**（或尚未创建 Release）。
+- 因此无法在 Release 页核对「功能 / 安装 / 用法」正文；仓库内有 `第八周提交包/06_发版与仓库证据/Release说明_可直接粘贴.md`，属于本地文稿，不是 GitHub Release 页本身。
 
 ---
 
 ## ④ 有没有已知限制
 
-**步骤：** 阅读 README「已知问题」栏目。
+**步骤：** 阅读 README「已知问题」。
 
 **现象：**
 
-- README **写了**「已知问题」，例如：知识库只有等级标准节选、库外问题会「资料中未提及」或自编；0.5b 对资料利用不稳、HSK4 数字曾答偏；首次加载可能超时、Ollama 未启动会失败。
-- 本机跑出的 HSK4「8 个」这类偏离，与其「已知问题」里写的小模型不稳、数字不准，方向一致（现象可对照）。
-
----
-
-## 附件：对照路径一览（现象）
-
-| 讲义期望 | 对象仓库实际路径 |
-|----------|------------------|
-| 助手入口 | `week8/课堂作业/assistant_v1.py`（目录名 `week8`，非 `week08_助手v1.0`） |
-| README / requirements / answer_log | 同在 `week8/课堂作业/` |
-| Release / tag | `v1.0` 已发布 |
+- README **写了**「已知问题」，例如：首次建库慢、Ollama 未启动会失败、0.5b 常漏标出处、数字校验管不住语义幻觉等。
+- 本机演示中「未标出处」、HSK4 题 RAG 下答「资料中未提及」，可与其自述的小模型/出处限制对照（只记现象，不评价好坏）。
