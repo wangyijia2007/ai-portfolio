@@ -6,7 +6,7 @@
   完整网址：https://github.com/cxy94/ai-portfolio
 - **评阅依据**：《第8周指定互评分配表_（更新版）》；讲义四维度只描述现象、不打分
 - **复现环境**：Windows、本机已有 Python / Ollama（`qwen2.5:0.5b`、`nomic-embed-text`）
-- **复现时间**：2026-11-11
+- **复现时间**：2026-11-11（①②④）；**③ 于 2026-11-12 复查更新**（对象已补发 Release）
 
 ---
 
@@ -46,14 +46,15 @@
 
 ## ③ Release 发了吗
 
-**步骤：** 查 Tags 与 Releases API。
+**步骤：** 查 Tags 与 Releases API（11-11 初评时无 Release 页；**11-12 复查**）。
 
-**现象：**
+**现象（更新后）：**
 
-- 远端存在 git 标签 **`v1.0`**（`refs/tags/v1.0` 可查到）。
-- Releases 列表长度为 **0**；`/releases/latest` 与 `/releases/tags/v1.0` 均为 404。  
-  → **有 tag，但网页端 Release 页面未发布**（或尚未创建 Release）。
-- 因此无法在 Release 页核对「功能 / 安装 / 用法」正文；仓库内有 `第八周提交包/06_发版与仓库证据/Release说明_可直接粘贴.md`，属于本地文稿，不是 GitHub Release 页本身。
+- 远端仍有 git 标签 **`v1.0`**。
+- 现已发布正式 Release（非 draft）：标题「v1.0 学科智能问答助手」。  
+  页面：https://github.com/cxy94/ai-portfolio/releases/tag/v1.0
+- Release 正文含「功能」等说明，并指向 `week08_assistant_v1/answer_log.md` 等路径；可从网页端打开核对。
+- 说明：11-11 初评时 Releases 列表为 0（仅有 tag、无网页 Release）；对象补发后本条已按最新远端现象改写。
 
 ---
 
