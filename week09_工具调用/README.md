@@ -24,18 +24,28 @@ $env:DEEPSEEK_MODEL="qwen2.5:0.5b"
 cd week09_工具调用
 python tool_agent.py
 python tool_agent.py "帮我算一下 35*24 等于多少"
-python tool_agent.py --demo   # 跑 3 条轨迹 + AST 拒绝记录 → call_trace.md
+python tool_agent.py "评估愚公移山对 HSK4 的难度"
+python tool_agent.py --demo   # 3 条轨迹 + AST 拒绝 → call_trace.md
 ```
 
-## 三个工具
+## 四个工具
 
 | 工具 | 输入 | 输出 |
 |------|------|------|
 | `get_time` | 无 | 当前时间 |
 | `calc` | 算式字符串 | 结果（白名单 AST，禁裸 eval） |
 | `hsk_level` | 生词 | HSK 等级（查 `data/生词表.csv`） |
+| `text_difficulty` | 课文或别名「愚公移山」+ 目标等级 | 覆盖率、达标词、超纲词 JSON |
 
-## 当堂交付
+## 交付清单
 
-- `tool_agent.py`（可运行，3 工具）
-- `call_trace.md`（≥3 条：问句 / 模型输出 / 工具返回 / 最终回答；含 AST 越权拒绝）
+**当堂**
+
+- `tool_agent.py`、`call_trace.md`
+
+**课后**
+
+- `failure_case.md`（作业 1 · 失败会诊）
+- `tool4_text_difficulty.md`（作业 2 · 第 4 工具说明）
+- `w10_preview.md`（作业 3 · 三者辨析）
+- `smolagents_map.md`（作业 4 · C 路径 5 行映射 + 反思）

@@ -90,11 +90,75 @@ def hsk_level(word):
     return "未找到 %s" % word
 
 
-TOOLS = {"get_time": get_time, "calc": calc, "hsk_level": hsk_level}
+def _load_vocab():
+    with open(VOCAB, encoding="utf-8") as f:
+        return list(csv.DictReader(f))
 
-SYS = ("你是国际中文助教。可用工具只有这 3 个：get_time（查当前时间，无参数）、"
+
+def text_difficulty(text_or_alias, target_level="4"):
+    """课文难度评估（作业 2 · 第 4 工具）。
+
+    输入：
+      text_or_alias: 课文原文，或别名「愚公移山」加载 data/愚公移山.txt
+      target_level: 目标 HSK 等级（如 3 / 4 / \"HSK4\"）
+    输出：JSON 字符串，含覆盖率、达标词、超纲词。
+    """
+    alias = str(text_or_alias).strip()
+    if alias in ("愚公移山", "愚公移山.txt", "yugong"):
+        path = weekpath.data_path("愚公移山.txt")
+        text = open(path, encoding="utf-8").read()
+        source = "愚公移山.txt"
+    else:
+        text = alias
+        source = "inline"
+    try:
+        target = int(re.sub(r"[^0-9]", "", str(target_level)) or "4")
+    except ValueError:
+        target = 4
+    rows = _load_vocab()
+    # 长词优先，避免「把」吃掉「把字句」
+    words = sorted({r["词汇"].strip(): r for r in rows if r.get("词汇")}.items(),
+                   key=lambda x: len(x[0]), reverse=True)
+    hits = []
+    for w, row in words:
+        if w and w in text:
+            try:
+                lv = int(str(row["HSK等级"]).strip())
+            except ValueError:
+                continue
+            hits.append({"word": w, "level": lv, "gloss": row.get("释义", "")})
+    if not hits:
+        return json.dumps({
+            "source": source, "target_level": target, "matched": 0,
+            "coverage": 0.0, "in_level": [], "over_level": [],
+            "note": "生词表中没有词出现在该课文里",
+        }, ensure_ascii=False)
+    in_level = [h for h in hits if h["level"] <= target]
+    over_level = [h for h in hits if h["level"] > target]
+    coverage = round(len(in_level) / len(hits), 3)
+    return json.dumps({
+        "source": source,
+        "target_level": target,
+        "matched": len(hits),
+        "coverage": coverage,
+        "in_level": ["%s(HSK%d)" % (h["word"], h["level"]) for h in in_level],
+        "over_level": ["%s(HSK%d)" % (h["word"], h["level"]) for h in over_level],
+    }, ensure_ascii=False)
+
+
+TOOLS = {
+    "get_time": get_time,
+    "calc": calc,
+    "hsk_level": hsk_level,
+    "text_difficulty": text_difficulty,
+}
+
+SYS = ("你是国际中文助教。可用工具只有这 4 个："
+       "get_time（查当前时间，无参数）、"
        "calc（四则运算，参数必须是完整算式字符串，如 calc('35*24')）、"
-       "hsk_level（查生词 HSK 等级，参数必须是词语本身，如 hsk_level('把')）。"
+       "hsk_level（查生词 HSK 等级，参数必须是词语本身，如 hsk_level('把')）、"
+       "text_difficulty（课文难度评估，如 text_difficulty('愚公移山','4')，"
+       "返回覆盖率与超纲词）。"
        '如需调用，只输出 JSON，格式：{"tool": "工具名", "args": [参数]}；'
        "只调用问题真正需要的工具，绝不编造不存在的工具名；无需工具时直接回答。"
        "复合问题时可输出多个 JSON 对象。")
@@ -201,6 +265,13 @@ def run(user_msg, max_calls=2, collect_trace=None):
                     # 从原问句里抓第一个汉字词作兜底（0.5b 常漏填 args）
                     m = re.search(r"[\u4e00-\u9fff]{1,4}", user_msg)
                     args = [m.group()] if m else [""]
+            elif call["tool"] == "text_difficulty":
+                if not args:
+                    args = ["愚公移山", "4"]
+                elif len(args) == 1:
+                    args = [str(args[0]), "4"]
+                else:
+                    args = [str(args[0]), str(args[1])]
             try:
                 out = TOOLS[call["tool"]](*args)
                 results.append("%s%r → %s" % (call["tool"], args, out))
