@@ -38,6 +38,10 @@ async def main():
             text3 = res3.content[0].text if res3.content else str(res3)
             print("list_by_level('1'):", text3)
 
+            res4 = await s.call_tool("count_by_level", {"level": "4"})
+            text4 = res4.content[0].text if res4.content else str(res4)
+            print("count_by_level('4'):", text4)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

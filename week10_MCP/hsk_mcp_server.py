@@ -49,7 +49,20 @@ def list_by_level(level: str) -> str:
     return "、".join(out) if out else "该等级暂无词汇"
 
 
+@mcp.tool()
+def count_by_level(level: str) -> str:
+    """统计某一 HSK 等级的词汇数量。
+
+    Args:
+        level: HSK 等级，如 \"3\" 或 \"4\"
+    """
+    n = sum(1 for row in _rows() if row["HSK等级"] == str(level).strip())
+    if n == 0:
+        return "该等级暂无词汇（数量 0）"
+    return "HSK %s 级共 %d 个词" % (str(level).strip(), n)
+
+
 if __name__ == "__main__":
     print("HSK MCP server waiting on stdio …", file=sys.stderr)
-    print("Tools: hsk_level / list_by_level", file=sys.stderr)
+    print("Tools: hsk_level / list_by_level / count_by_level", file=sys.stderr)
     mcp.run()

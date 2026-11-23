@@ -1,4 +1,4 @@
-# W10 实验 3 · mcp_practice.md（离场交付）
+# W10 实验 3 · mcp_practice.md（课后作业 1）
 
 > 仓库：`wangyijia2007/ai-portfolio`  
 > 目录：`week10_MCP/`  
@@ -28,7 +28,7 @@ python hsk_mcp_server.py
 
 ```text
 HSK MCP server waiting on stdio …
-Tools: hsk_level / list_by_level
+Tools: hsk_level / list_by_level / count_by_level
 ```
 
 ### 3. 客户端配置原文（最小客户端 / 桌面客户端通用）
@@ -67,7 +67,7 @@ params = StdioServerParameters(
 ### 1. 工具列表（发现）
 
 ```text
-工具列表: ['hsk_level', 'list_by_level']
+工具列表: ['hsk_level', 'list_by_level', 'count_by_level']
 ```
 
 ### 2. 调用返回
@@ -76,28 +76,27 @@ params = StdioServerParameters(
 hsk_level('把'): 把 -> 3 级
 list_by_level('3'): 把、决定
 list_by_level('1'): 该等级暂无词汇
+count_by_level('4'): HSK 4 级共 4 个词
 ```
 
-说明：生词表中无 HSK 1 级词，返回「该等级暂无词汇」符合讲义口径，属正确行为。
+说明：生词表中无 HSK 1 级词，返回「该等级暂无词汇」符合讲义口径，属正确行为。第 3 个工具 `count_by_level` 见 `tool3_count_by_level.md`。
 
 ---
 
-## 三、三者辨析（各一句话）
+## 三、三者辨析（各一句话，照第三节口径）
 
-| 概念 | 哪一侧 | 解决什么 |
-|------|--------|----------|
-| **Function Calling** | 模型侧 | 模型怎么「点名」要调哪个工具、带什么参数 |
-| **MCP** | 工具侧 | 工具怎么被统一发现和调用（协议） |
-| **普通 API 调用** | 程序侧 | 代码怎么直接请求一个服务（无「模型现场决定」） |
+1. **Function Calling**：模型侧机制——解决模型怎么「点名」要调哪个工具、带什么参数。  
+2. **MCP**：工具侧协议——解决工具怎么被统一发现和调用。  
+3. **普通 API 调用**：程序侧写法——代码怎么直接请求一个服务（没有「模型现场决定」）。
 
 课程对应：W9 `tool_agent.py` ≈ Function Calling；W10 `hsk_mcp_server.py` ≈ MCP；W4 调 DeepSeek ≈ 普通 API。
 
 ---
 
-## 四、离场自查
+## 四、课后自查
 
 - [x] mcp 库装好，服务端能启动（挂起等待）
-- [x] 客户端列出 `hsk_level` / `list_by_level`
-- [x] `hsk_level("把")` → `把 -> 3 级`；`list_by_level` 可按等级查询
+- [x] 客户端列出 `hsk_level` / `list_by_level` / `count_by_level`
+- [x] `hsk_level("把")` → `把 -> 3 级`；`count_by_level("4")` → `HSK 4 级共 4 个词`
 - [x] 本文三样齐全：配置 / 调用证据 / 三者辨析
-- [x] 无 `.env` 入仓；commit + push
+- [x] 无 `.env` 入仓
