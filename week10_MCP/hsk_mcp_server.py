@@ -1,10 +1,9 @@
-# W10 MCP 服务端骨架（约 60 行）
-# 预习：python hsk_mcp_server.py —— stdio 服务端会「卡住」等待客户端，属成功。
-# 兼容 mcp 1.x（FastMCP）与 2.x（MCPServer）。
+# W10 MCP 服务端（与讲义骨架一致）
+# 运行：在 week10_MCP 目录执行 python hsk_mcp_server.py
+# 挂起等待客户端连接 = 成功。兼容 mcp 1.x / 2.x。
 from __future__ import annotations
 
 import csv
-import datetime
 import os
 import sys
 
@@ -16,44 +15,41 @@ VOCAB = weekpath.data_path("生词表.csv")
 
 # ---- 版本自适应：1.x FastMCP / 2.x MCPServer ----
 try:
-    from mcp.server.fastmcp import FastMCP as _Server  # type: ignore
+    from mcp.server.fastmcp import FastMCP  # mcp 1.x
+except ImportError:
+    try:
+        from mcp.server import MCPServer as FastMCP  # mcp 2.x
+    except ImportError:
+        raise SystemExit(
+            '未找到 MCP 服务端库。请先安装：pip install "mcp[cli]"\n'
+            "（若使用 mcp 2.x，本文件会自动改用 MCPServer，无需改代码。）"
+        )
 
-    _VER = "1.x"
-except ModuleNotFoundError:
-    from mcp.server.mcpserver import MCPServer as _Server  # type: ignore
+mcp = FastMCP("hsk-tools")
 
-    _VER = "2.x"
 
-mcp = _Server("hsk-tools")
+def _rows():
+    with open(VOCAB, encoding="utf-8") as f:
+        return list(csv.DictReader(f))
 
 
 @mcp.tool()
 def hsk_level(word: str) -> str:
-    """查课程生词表里词语的 HSK 等级。
-
-    Args:
-        word: 要查询的汉字或词语
-    """
-    with open(VOCAB, encoding="utf-8") as f:
-        for row in csv.DictReader(f):
-            if row["词汇"].strip() == str(word).strip():
-                return "%s 是 %s 级" % (word, row["HSK等级"])
+    """查询某个词属于 HSK 几级。"""
+    for row in _rows():
+        if row["词汇"].strip() == str(word).strip():
+            return "%s -> %s 级" % (word, row["HSK等级"])
     return "未找到 %s" % word
 
 
 @mcp.tool()
-def get_time() -> str:
-    """返回本机当前时间（无参数）。"""
-    return str(datetime.datetime.now())
+def list_by_level(level: str) -> str:
+    """列出某一 HSK 等级的全部词汇。"""
+    out = [row["词汇"] for row in _rows() if row["HSK等级"] == str(level).strip()]
+    return "、".join(out) if out else "该等级暂无词汇"
 
 
 if __name__ == "__main__":
-    # 标准输出给 MCP 客户端；提示打到 stderr，避免污染协议流
-    print("HSK MCP server starting (%s) … waiting on stdio" % _VER, file=sys.stderr)
-    print("Tools: hsk_level(word: str), get_time()", file=sys.stderr)
-    print("Ctrl+C to stop. 卡住不退出 = 成功。", file=sys.stderr)
-    # 2.x: run(transport='stdio')；1.x FastMCP 同样支持 run()
-    try:
-        mcp.run(transport="stdio")
-    except TypeError:
-        mcp.run()
+    print("HSK MCP server waiting on stdio …", file=sys.stderr)
+    print("Tools: hsk_level / list_by_level", file=sys.stderr)
+    mcp.run()
